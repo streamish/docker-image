@@ -1,0 +1,82 @@
+name: Build and start Docker image
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  docker-build-and-start:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Determine current branch
+        id: branch
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            branch="${{ github.head_ref }}"
+          else
+            branch="${{ github.ref_name }}"
+          fi
+
+          # Docker build arguments cannot safely contain a newline.
+          branch="${branch//$'\n'/}"
+          branch="${branch//$'\r'/}"
+
+          echo "Using branch: $branch"
+          echo "name=$branch" >> "$GITHUB_OUTPUT"
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg BACKEND_BRANCH="${{ steps.branch.outputs.name }}" \
+            --build-arg FRONTEND_BRANCH="${{ steps.branch.outputs.name }}" \
+            --tag music-server:test \
+            .
+      - name: Start container
+        run: |
+          docker run \
+            --detach \
+            --name music-server-test \
+            --publish 8000:8000 \
+            music-server:test
+      - name: Wait for the frontend to start
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 60); do
+            if curl \
+                --fail \
+                --silent \
+                --show-error \
+                --max-time 5 \
+                http://127.0.0.1:8000/ \
+                > /tmp/music-server-response.html; then
+              echo "Container is responding"
+              head -c 500 /tmp/music-server-response.html
+              exit 0
+            fi
+            if ! docker inspect \
+                --format='{{.State.Running}}' \
+                music-server-test 2>/dev/null | grep -q true; then
+              echo "Container exited before becoming ready"
+              docker logs music-server-test
+              exit 1
+            fi
+            echo "Waiting for container to start: ${attempt}/60"
+            sleep 2
+          done
+          echo "Container did not become ready"
+          docker logs music-server-test
+          exit 1
+      - name: Verify container is still running
+        run: |
+          test "$(docker inspect \
+            --format='{{.State.Running}}' \
+            music-server-test)" = "true"
+      - name: Show container logs
+        if: always()
+        run: docker logs music-server-test
+      - name: Stop and remove container
+        if: always()
+        run: docker rm --force music-server-test || true
