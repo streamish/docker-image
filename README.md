@@ -2,7 +2,7 @@
 
 This software indexes music files in one or more folders and provides an API for accessing them.
 
-The goal of this server is to be a multi-client backend that allows existing music smartphone apps to be used without a proprietary NAS, cloud service, and as a lightweight alternative to video-streaming software like JellyFin. Each person using the server can exercise their own preference for which smartphone app they want to use.
+The goal of this server is to be a multi-client backend that allows existing music smartphone apps to be used without a proprietary NAS, cloud service, and as a lightweight alternative to hosting music libraries in video-streaming software like JellyFin. Each user can exercise their own preference for which smartphone app they want to use.
 
 This software is not "vibe-coded" but has been built in conjunction with GitHub Copilot's code completion functionality.
 
