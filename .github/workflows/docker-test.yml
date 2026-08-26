@@ -19,11 +19,9 @@ jobs:
           else
             branch="${{ github.ref_name }}"
           fi
-
           # Docker build arguments cannot safely contain a newline.
           branch="${branch//$'\n'/}"
           branch="${branch//$'\r'/}"
-
           echo "Using branch: $branch"
           echo "name=$branch" >> "$GITHUB_OUTPUT"
       - name: Build Docker image
