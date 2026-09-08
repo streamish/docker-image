@@ -8,18 +8,18 @@ This software is not "vibe-coded" but has been built in conjunction with GitHub 
 
 ## Docker Image
 
-This is the official docker image combining [music-server](https://github.com/selfhostmedia/music-server) and [music-webui](https://github.com/selfhostmedia/music-webui).
+This is the official docker image combining [music-server](https://github.com/musiclib/music-server) and [music-webui](https://github.com/musiclib/music-webui).
 
 Internally it builds the `music-server` backend and the `music-webui` frontend and uses Nginx to serve the frontend and proxy the backend.
 
 The SQLite database will be built automatically in the `/data` volume, and the music files will be read from the `/music` and `/library1...10` volumes which can be mounted as read-only.
 
-When the container starts it will automatically create a default administrator account with the username `admin` and password `admin` and a default normal user account with the username `user` and password `user`.  Their libraries can be set up automatically.
+When the container starts it will automatically create a default administrator account with the username `admin` and password `admin` and a default normal user account with the username `user` and password `user`. Their libraries can be set up automatically.
 
-You can disable creating the user account and create them as needed in the administration UI.  Control these settings with the following environment variables:
+You can disable creating the user account and create them as needed in the administration UI. Control these settings with the following environment variables:
 
-| Variable                  | Default value | Description |
-|---------------------------|---------------|---------------------------------------------------------------------|
+| Variable                  | Default value | Description                                                         |
+| ------------------------- | ------------- | ------------------------------------------------------------------- |
 | `DEFAULT_ADMIN_USERNAME`  | `admin`       | The username for the default administrator account                  |
 | `DEFAULT_ADMIN_PASSWORD`  | `admin`       | The password for the default administrator account                  |
 | `DEFAULT_ADMIN_ROOT_PATH` |               | Comma-separated list of paths for the default administrator account |
@@ -30,15 +30,15 @@ You can disable creating the user account and create them as needed in the admin
 
 You can enable API compatibility:
 
-| Variable                        | Default value | Description |
-|---------------------------------|---------------|------------------------------------------------------------------|
+| Variable                        | Default value | Description                                                      |
+| ------------------------------- | ------------- | ---------------------------------------------------------------- |
 | `SYNOLOGY_AUDIOSTATION_ENABLED` |               | Set to `true` to enable Synology Audio Station API compatibility |
 
 You can enable Swagger API interface for the backend APIs:
 
-| Variable                        | Default value | Description |
-|---------------------------------|---------------|------------------------------------------------------------------|
-| `SWAGGER_ENABLED`               |               | Set to `true` to enable Swagger documentation |
+| Variable          | Default value | Description                                   |
+| ----------------- | ------------- | --------------------------------------------- |
+| `SWAGGER_ENABLED` |               | Set to `true` to enable Swagger documentation |
 
 ## How to access
 
@@ -57,7 +57,7 @@ If you are accessing over your network you can replace `localhost` with the IP a
 To build from the main branch:
 
 ```bash
-$ git clone https://github.com/selfhostmedia/docker-image.git
+$ git clone https://github.com/musiclib/docker-image.git
 $ cd docker-image
 $ docker build -t music-server .
 ```
@@ -65,7 +65,7 @@ $ docker build -t music-server .
 To build a different branch:
 
 ```bash
-$ git clone https://github.com/selfhostmedia/docker-image.git
+$ git clone https://github.com/musiclib/docker-image.git
 $ cd docker-image
 $ docker build \
   --build-arg BACKEND_BRANCH=feat/in-development \
@@ -128,9 +128,9 @@ services:
       - ...
       - /path/to/your/library10:/library10:ro
     environment:
-        - DEFAULT_ADMIN_USERNAME=admin
-        - DEFAULT_ADMIN_PASSWORD=admin
-        - DISABLE_DEFAULT_USER=true
-        - SYNOLOGY_AUDIOSTATION_ENABLED=true
+      - DEFAULT_ADMIN_USERNAME=admin
+      - DEFAULT_ADMIN_PASSWORD=admin
+      - DISABLE_DEFAULT_USER=true
+      - SYNOLOGY_AUDIOSTATION_ENABLED=true
     restart: unless-stopped
 ```

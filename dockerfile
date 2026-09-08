@@ -10,7 +10,7 @@ ARG FRONTEND_BRANCH=main
 FROM node:24-alpine AS backend-build
 RUN apk add --no-cache git openssl
 WORKDIR /build
-RUN git clone https://github.com/selfhostmedia/music-server.git music-server \
+RUN git clone https://github.com/musiclib/music-server.git music-server \
     && cd music-server \
     && if git ls-remote --exit-code --heads origin "$BACKEND_BRANCH" >/dev/null 2>&1; then \
          echo "Using backend branch: $BACKEND_BRANCH"; \
@@ -34,7 +34,7 @@ RUN cd certs \
 FROM node:24-alpine AS frontend-build
 RUN apk add --no-cache git
 WORKDIR /build
-RUN git clone https://github.com/selfhostmedia/music-webui.git music-webui \
+RUN git clone https://github.com/musiclib/music-webui.git music-webui \
     && cd music-webui \
     && if git ls-remote --exit-code --heads origin "$FRONTEND_BRANCH" >/dev/null 2>&1; then \
          echo "Using frontend branch: $FRONTEND_BRANCH"; \
