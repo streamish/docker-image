@@ -1,6 +1,5 @@
 name: Build and start Docker image
 on:
-  push:
   pull_request:
   workflow_dispatch:
 jobs:
