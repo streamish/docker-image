@@ -1,12 +1,11 @@
 name: Build and start Docker image
 on:
-  push:
   pull_request:
   workflow_dispatch:
 jobs:
-  docker-build-and-start:
+  docker-image-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
