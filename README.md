@@ -1,8 +1,12 @@
-# Music Server
+# Streamish Music
 
 This software indexes music files in one or more folders and provides a multi-user API for accessing them and administrating user accounts.  The API has compatibility options for Synology Audio Station and QNAP Music Station allowing you to use their DS Audio and QMusic smartphone apps.
 
-The goal of this server is to be a multi-client backend that allows existing music smartphone apps to be used without a proprietary NAS or cloud service, and as a lightweight alternative to hosting music libraries in video-streaming software like JellyFin. Each user can exercise their own preference for which smartphone app they want to use.
+A responsive, light-and-dark mode supporting web interface provides administrative capabilities for managing user accounts, root folders, and sessions, as well as allowing users to browse and play their music library.
+
+The goal of this software is to be a multi-client backend that allows existing music smartphone apps to be used without a proprietary NAS or cloud service. Each user can exercise their own preference for which smartphone app they want to use.
+
+![Screenshot](https://streamish.github.io/screenshots/Screenshot%202026-11-04%20at%2012-31-49%20Albums.png)
 
 ## Docker Image
 
