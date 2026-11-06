@@ -4,7 +4,7 @@ This software indexes music files in one or more folders and provides a multi-us
 
 A responsive, light-and-dark mode supporting web interface provides administrative capabilities for managing user accounts, root folders, and sessions, as well as allowing users to browse and play their music library.
 
-The goal of this software is to be a multi-client backend that allows existing music smartphone apps to be used without a proprietary NAS or cloud service. Each user can exercise their own preference for which smartphone app they want to use.
+The goal of this software is to be an all-in-one music server solution that allows existing music smartphone apps to be used without a proprietary NAS or cloud service, so each of your users can exercise their own preference which smartphone app they want to use.
 
 ![Screenshot](https://streamish.github.io/screenshots/Screenshot%202026-11-04%20at%2012-31-49%20Albums.png)
 
