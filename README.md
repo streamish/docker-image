@@ -17,7 +17,8 @@ $ docker run \
   -e DEFAULT_ADMIN_PASSWORD=admin \
   -e DISABLE_DEFAULT_USER=true \
   -e SYNOLOGY_AUDIOSTATION_ENABLED=true \
-  -e QNAP_MUSICSTATION_ENABLED=true \
+  -e QNAP_MUSIC_STATION_ENABLED=true \
+  -e SUBSONIC_ENABLED=true \
   streamish/music
 ```
 
@@ -36,7 +37,8 @@ You can enable API compatibility:
 | Variable                        | Default value | Description                                                      |
 | ------------------------------- | ------------- | ---------------------------------------------------------------- |
 | `SYNOLOGY_AUDIOSTATION_ENABLED` | false         | Set to `true` to enable Synology Audio Station API compatibility |
-| `QNAP_MUSICSTATION_ENABLED`     | false         | Set to `true` to enable QNAP Music Station API compatibility     |
+| `QNAP_MUSIC_STATION_ENABLED`     | false         | Set to `true` to enable QNAP Music Station API compatibility     |
+| `SUBSONIC_ENABLED`               | false         | Set to `true` to enable Subsonic API compatibility              |
 
 You can enable Swagger API interface for the backend APIs:
 
@@ -95,7 +97,7 @@ docker run --rm \
   -e DEFAULT_ADMIN_ROOT_PATH=/music \
   -e DISABLE_DEFAULT_USER=true \
   -e SYNOLOGY_AUDIOSTATION_ENABLED=true \
-  -e QNAP_MUSICSTATION_ENABLED=true \
+  -e QNAP_MUSIC_STATION_ENABLED=true \
   streamish/music
 ```
 > **Note:** The `:ro` suffix in the volume mounts makes the directories read-only inside the container.  Only your data directory needs write access.
@@ -142,6 +144,6 @@ services:
       - DEFAULT_ADMIN_PASSWORD=admin
       - DISABLE_DEFAULT_USER=true
       - SYNOLOGY_AUDIOSTATION_ENABLED=true
-      - QNAP_MUSICSTATION_ENABLED=true
+      - QNAP_MUSIC_STATION_ENABLED=true
     restart: unless-stopped
 ```
