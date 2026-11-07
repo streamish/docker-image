@@ -1,16 +1,24 @@
 # Streamish Music
 
-This software indexes music files in one or more folders and provides a multi-user API for accessing them and administrating user accounts.  The API has compatibility options for Synology Audio Station and QNAP Music Station allowing you to use their DS Audio and QMusic smartphone apps.
+Streamish is a self-hosted music server and browser interface that aims to provide compatibility with popular mobile music apps while allowing users to maintain control over their music library.
 
-A responsive, light-and-dark mode supporting web interface provides administrative capabilities for managing user accounts, root folders, and sessions, as well as allowing users to browse and play their music library.
+Screenshots: https://streamish.github.io
 
-The goal of this software is to be an all-in-one music server solution that allows existing music smartphone apps to be used without a proprietary NAS or cloud service, so each of your users can exercise their own preference which smartphone app they want to use.
+API documentation: https://streamish.github.io/api
 
-![Screenshot](https://streamish.github.io/screenshots/Screenshot%202026-11-04%20at%2012-31-49%20Albums.png)
+Server: https://github.com/streamish/music-server
 
-## Docker Image
+Web UI: https://github.com/streamish/music-webui
+
+Docker: https://hub.docker.com/r/streamish/music
+
+## About the Docker Image
 
 This is the official docker image combining [music-server](https://github.com/musiclib/music-server) and [music-webui](https://github.com/musiclib/music-webui). Internally it builds the `music-server` backend and the `music-webui` frontend and uses Nginx to serve the frontend and proxy the backend off the same port.
+
+This docker image randomly generates a `JWT_SECRET` environment variable for securing JWT authentication, and generates new certificates for Synology's DS Audio client apps.
+
+It attaches up to 10 different volumes for mounting your music libraries.
 
 ```bash
 $ docker run \
@@ -55,14 +63,6 @@ You can enable Swagger API interface for the backend APIs:
 Once the container is running you can sign in at:
 
 [http://localhost:8000](http://localhost:8000)
-
-Or access Swagger documentation at:
-
-[http://localhost:8000/swagger](http://localhost:8000/swagger)
-
-or
-
-[http://localhost:7000/swagger](http://localhost:7000/swagger) without the docker container
 
 If you are accessing over your network you can replace `localhost` with the IP address of the machine running the container.
 
