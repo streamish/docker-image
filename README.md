@@ -14,9 +14,9 @@ Docker: https://hub.docker.com/r/streamish/music
 
 ## About the Docker Image
 
-This is the official docker image combining [music-server](https://github.com/musiclib/music-server) and [music-webui](https://github.com/musiclib/music-webui). Internally it builds the `music-server` backend and the `music-webui` frontend and uses Nginx to serve the frontend and proxy the backend off the same port.
+This is the official Docker image combining [music-server](https://github.com/musiclib/music-server) and [music-webui](https://github.com/musiclib/music-webui). Internally it builds the `music-server` backend and the `music-webui` frontend and uses Nginx to serve the frontend and proxy the backend off the same port.
 
-This docker image randomly generates a `JWT_SECRET` environment variable for securing JWT authentication, and generates new certificates for Synology's DS Audio client apps.
+This Docker image randomly generates a `JWT_SECRET` environment variable for securing JWT authentication, and generates new certificates for Synology's DS Audio client apps.
 
 It attaches up to 10 different volumes for mounting your music libraries.
 
@@ -32,6 +32,27 @@ $ docker run \
   -e QNAP_MUSIC_STATION_ENABLED=true \
   -e SUBSONIC_ENABLED=true \
   streamish/music
+```
+
+Or with Docker Compose:
+
+```yaml
+version: '3.8'
+services:
+  music:
+    image: streamish/music
+    ports:
+      - "8000:8000"
+    volumes:
+      - /my/music:/music:ro
+      - /my/data:/data:rw
+    environment:
+      DEFAULT_ADMIN_USERNAME: admin
+      DEFAULT_ADMIN_PASSWORD: admin
+      DISABLE_DEFAULT_USER: "true"
+      SYNOLOGY_AUDIOSTATION_ENABLED: "true"
+      QNAP_MUSIC_STATION_ENABLED: "true"
+      SUBSONIC_ENABLED: "true"
 ```
 
 | Variable                  | Default value | Description                                                         |
