@@ -26,8 +26,8 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg BACKEND_BRANCH="${{ steps.branch.outputs.name }}" \
-            --build-arg FRONTEND_BRANCH="${{ steps.branch.outputs.name }}" \
+            --build-arg BACKEND_REF="${{ steps.branch.outputs.name }}" \
+            --build-arg FRONTEND_REF="${{ steps.branch.outputs.name }}" \
             --tag music-server:test \
             .
       - name: Start container

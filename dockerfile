@@ -1,25 +1,24 @@
 # --------------------------------
 # Build arguments
 # --------------------------------
-ARG BACKEND_BRANCH=main
-ARG FRONTEND_BRANCH=main
+ARG BACKEND_REF=latest
+ARG FRONTEND_REF=latest
 
 # --------------------------------
 # Build the backend
 # --------------------------------
 FROM node:24-alpine AS backend-build
+ARG BACKEND_REF
 RUN apk add --no-cache git openssl
 WORKDIR /build
 RUN git clone https://github.com/streamish/music-server.git music-server \
     && cd music-server \
-    && if git ls-remote --exit-code --heads origin "$BACKEND_BRANCH" >/dev/null 2>&1; then \
-         echo "Using backend branch: $BACKEND_BRANCH"; \
-         git fetch origin "$BACKEND_BRANCH" \
-         git checkout -B "$BACKEND_BRANCH" "origin/$BACKEND_BRANCH"; \
-       else \
-         echo "Backend branch '$BACKEND_BRANCH' does not exist; using main"; \
-         git checkout main; \
-       fi
+    && if [ "$BACKEND_REF" = "latest" ]; then \
+         BACKEND_REF="$(node -e 'fetch("https://api.github.com/repos/streamish/music-server/releases/latest", {headers: {"User-Agent": "streamish-docker-build", "Accept": "application/vnd.github+json"}}).then(async response => { if (!response.ok) throw new Error(`GitHub API returned ${response.status}`); const release = await response.json(); if (!release.tag_name) throw new Error("Latest release has no tag_name"); console.log(release.tag_name); }).catch(error => { console.error(error); process.exit(1); })')"; \
+       fi \
+    && echo "Using backend ref: $BACKEND_REF" \
+    && git fetch --depth 1 origin "$BACKEND_REF" \
+    && git checkout --detach FETCH_HEAD
 WORKDIR /build/music-server
 RUN npm ci
 RUN npm run build
@@ -32,18 +31,17 @@ RUN cd certs \
 # Build the frontend
 # --------------------------------
 FROM node:24-alpine AS frontend-build
+ARG FRONTEND_REF
 RUN apk add --no-cache git
 WORKDIR /build
 RUN git clone https://github.com/streamish/music-webui.git music-webui \
     && cd music-webui \
-    && if git ls-remote --exit-code --heads origin "$FRONTEND_BRANCH" >/dev/null 2>&1; then \
-         echo "Using frontend branch: $FRONTEND_BRANCH"; \
-         git fetch origin "$FRONTEND_BRANCH" \
-         git checkout -B "$FRONTEND_BRANCH" "origin/$FRONTEND_BRANCH"; \
-       else \
-         echo "Frontend branch '$FRONTEND_BRANCH' does not exist; using main"; \
-         git checkout main; \
-       fi
+    && if [ "$FRONTEND_REF" = "latest" ]; then \
+         FRONTEND_REF="$(node -e 'fetch("https://api.github.com/repos/streamish/music-webui/releases/latest", {headers: {"User-Agent": "streamish-docker-build", "Accept": "application/vnd.github+json"}}).then(async response => { if (!response.ok) throw new Error(`GitHub API returned ${response.status}`); const release = await response.json(); if (!release.tag_name) throw new Error("Latest release has no tag_name"); console.log(release.tag_name); }).catch(error => { console.error(error); process.exit(1); })')"; \
+       fi \
+    && echo "Using frontend ref: $FRONTEND_REF" \
+    && git fetch --depth 1 origin "$FRONTEND_REF" \
+    && git checkout --detach FETCH_HEAD
 WORKDIR /build/music-webui
 RUN npm ci
 ENV NODE_ENV=production

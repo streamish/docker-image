@@ -89,7 +89,8 @@ If you are accessing over your network you can replace `localhost` with the IP a
 
 ### Setting up
 
-To build from the main branch:
+By default, the Docker build uses the latest published release from each
+repository:
 
 ```bash
 $ git clone https://github.com/musiclib/docker-image.git
@@ -97,16 +98,21 @@ $ cd docker-image
 $ docker build -t music-server .
 ```
 
-To build a different branch:
+To build specific branches, tags, or other Git refs instead, pass the desired
+refs as build arguments:
 
 ```bash
 $ git clone https://github.com/musiclib/docker-image.git
 $ cd docker-image
 $ docker build \
-  --build-arg BACKEND_BRANCH=feat/in-development \
-  --build-arg FRONTEND_BRANCH=feat/in-development \
+  --build-arg BACKEND_REF=feat/in-development \
+  --build-arg FRONTEND_REF=feat/in-development \
   -t music-server .
 ```
+
+The default `latest` value is resolved from each repository's GitHub
+`releases/latest` endpoint during the build. Pin both refs when you need a
+reproducible image build.
 
 ### Running
 
