@@ -9,25 +9,10 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Determine current branch
-        id: branch
-        shell: bash
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            branch="${{ github.head_ref }}"
-          else
-            branch="${{ github.ref_name }}"
-          fi
-          # Docker build arguments cannot safely contain a newline.
-          branch="${branch//$'\n'/}"
-          branch="${branch//$'\r'/}"
-          echo "Using branch: $branch"
-          echo "name=$branch" >> "$GITHUB_OUTPUT"
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg BACKEND_REF="${{ steps.branch.outputs.name }}" \
-            --build-arg FRONTEND_REF="${{ steps.branch.outputs.name }}" \
+            --file dockerfile \
             --tag music-server:test \
             .
       - name: Start container

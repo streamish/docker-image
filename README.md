@@ -90,29 +90,40 @@ If you are accessing over your network you can replace `localhost` with the IP a
 ### Setting up
 
 By default, the Docker build uses the latest published release from each
-repository:
+repository. To select a specific release or branch, pass its name as a build
+argument; a release takes precedence if both arguments are provided.
+
+Latest release:
 
 ```bash
 $ git clone https://github.com/musiclib/docker-image.git
 $ cd docker-image
-$ docker build -t music-server .
+$ docker build -f dockerfile -t music-server .
 ```
 
-To build specific branches, tags, or other Git refs instead, pass the desired
-refs as build arguments:
+Specify release:
 
 ```bash
-$ git clone https://github.com/musiclib/docker-image.git
-$ cd docker-image
 $ docker build \
-  --build-arg BACKEND_REF=feat/in-development \
-  --build-arg FRONTEND_REF=feat/in-development \
+  --build-arg BACKEND_RELEASE=v1.2.3 \
+  --build-arg FRONTEND_RELEASE=v1.2.3 \
+  -f dockerfile \
   -t music-server .
 ```
 
-The default `latest` value is resolved from each repository's GitHub
-`releases/latest` endpoint during the build. Pin both refs when you need a
-reproducible image build.
+Specify branch:
+
+```bash
+$ docker build \
+  --build-arg BACKEND_BRANCH=feat/in-development \
+  --build-arg FRONTEND_BRANCH=feat/in-development \
+  -f dockerfile \
+  -t music-server .
+```
+
+The selection order is applied independently to the backend and frontend:
+`*_RELEASE`, then `*_BRANCH`, then the latest published release. Release values
+must match a Git tag in the corresponding repository.
 
 ### Running
 

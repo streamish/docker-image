@@ -1,24 +1,34 @@
 # --------------------------------
 # Build arguments
 # --------------------------------
-ARG BACKEND_BRANCH=main
-ARG FRONTEND_BRANCH=main
+ARG BACKEND_RELEASE=
+ARG BACKEND_BRANCH=
+ARG FRONTEND_RELEASE=
+ARG FRONTEND_BRANCH=
 
 # --------------------------------
 # Build the backend
 # --------------------------------
 FROM node:24-alpine AS backend-build
-RUN apk add --no-cache git openssl
+ARG BACKEND_RELEASE
+ARG BACKEND_BRANCH
+RUN apk add --no-cache curl git jq openssl
 WORKDIR /build
 RUN git clone https://github.com/streamish/music-server.git music-server \
     && cd music-server \
-    && if git ls-remote --exit-code --heads origin "$BACKEND_BRANCH" >/dev/null 2>&1; then \
+    && if [ -n "$BACKEND_RELEASE" ]; then \
+         echo "Using backend release: $BACKEND_RELEASE"; \
+         git fetch --depth 1 origin "refs/tags/$BACKEND_RELEASE:refs/tags/$BACKEND_RELEASE" \
+         && git checkout --detach "$BACKEND_RELEASE"; \
+       elif [ -n "$BACKEND_BRANCH" ]; then \
          echo "Using backend branch: $BACKEND_BRANCH"; \
-         git fetch origin "$BACKEND_BRANCH" \
-         git checkout -B "$BACKEND_BRANCH" "origin/$BACKEND_BRANCH"; \
+         git fetch --depth 1 origin "refs/heads/$BACKEND_BRANCH:refs/remotes/origin/$BACKEND_BRANCH" \
+         && git checkout --detach "refs/remotes/origin/$BACKEND_BRANCH"; \
        else \
-         echo "Backend branch '$BACKEND_BRANCH' does not exist; using main"; \
-         git checkout main; \
+         BACKEND_LATEST_RELEASE="$(curl -fsSL https://api.github.com/repos/streamish/music-server/releases/latest | jq -er '.tag_name')" \
+         && echo "Using latest backend release: $BACKEND_LATEST_RELEASE" \
+         && git fetch --depth 1 origin "refs/tags/$BACKEND_LATEST_RELEASE:refs/tags/$BACKEND_LATEST_RELEASE" \
+         && git checkout --detach "$BACKEND_LATEST_RELEASE"; \
        fi
 WORKDIR /build/music-server
 RUN npm ci
@@ -32,17 +42,25 @@ RUN cd certs \
 # Build the frontend
 # --------------------------------
 FROM node:24-alpine AS frontend-build
-RUN apk add --no-cache git
+ARG FRONTEND_RELEASE
+ARG FRONTEND_BRANCH
+RUN apk add --no-cache curl git jq
 WORKDIR /build
 RUN git clone https://github.com/streamish/music-webui.git music-webui \
     && cd music-webui \
-    && if git ls-remote --exit-code --heads origin "$FRONTEND_BRANCH" >/dev/null 2>&1; then \
+    && if [ -n "$FRONTEND_RELEASE" ]; then \
+         echo "Using frontend release: $FRONTEND_RELEASE"; \
+         git fetch --depth 1 origin "refs/tags/$FRONTEND_RELEASE:refs/tags/$FRONTEND_RELEASE" \
+         && git checkout --detach "$FRONTEND_RELEASE"; \
+       elif [ -n "$FRONTEND_BRANCH" ]; then \
          echo "Using frontend branch: $FRONTEND_BRANCH"; \
-         git fetch origin "$FRONTEND_BRANCH" \
-         git checkout -B "$FRONTEND_BRANCH" "origin/$FRONTEND_BRANCH"; \
+         git fetch --depth 1 origin "refs/heads/$FRONTEND_BRANCH:refs/remotes/origin/$FRONTEND_BRANCH" \
+         && git checkout --detach "refs/remotes/origin/$FRONTEND_BRANCH"; \
        else \
-         echo "Frontend branch '$FRONTEND_BRANCH' does not exist; using main"; \
-         git checkout main; \
+         FRONTEND_LATEST_RELEASE="$(curl -fsSL https://api.github.com/repos/streamish/music-webui/releases/latest | jq -er '.tag_name')" \
+         && echo "Using latest frontend release: $FRONTEND_LATEST_RELEASE" \
+         && git fetch --depth 1 origin "refs/tags/$FRONTEND_LATEST_RELEASE:refs/tags/$FRONTEND_LATEST_RELEASE" \
+         && git checkout --detach "$FRONTEND_LATEST_RELEASE"; \
        fi
 WORKDIR /build/music-webui
 RUN npm ci
