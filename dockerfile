@@ -115,31 +115,18 @@ http {
         root /app/music-webui/dist;
         index index.html;
 
-        # Proxy API requests to the backend.
-        location /api/ {
-            proxy_pass http://127.0.0.1:7000;
-            proxy_http_version 1.1;
-
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-        }
-
-        # Proxy Synology API requests to the backend.
-        location /webapi/ {
-            proxy_pass http://127.0.0.1:7000;
-            proxy_http_version 1.1;
-
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-        }
-
-        # Support frontend client-side routing.
         location / {
-            try_files $uri $uri/ /index.html;
+            try_files $uri $uri/ @backend;
+        }
+
+        location @backend {
+            proxy_pass http://127.0.0.1:7000;
+            proxy_http_version 1.1;
+
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
         }
     }
 }
@@ -182,7 +169,7 @@ VOLUME ["/data", "/music", "/library1", "/library2", "/library3", "/library4", "
 
 ENV BUILD_DATABASE=true
 ENV SERVER_PORT=7000
-ENV SERVER_ADDRESS=127.0.0.1
+ENV SERVER_ADDRESS=127.0.0.1/api
 ENV FRONTEND_PORT=8000
 ENV FRONTEND_ADDRESS=127.0.0.1
 ENV DATABASE_PATH=/data/streamish.sqlite
