@@ -150,6 +150,7 @@ set -eu
 export JWT_SECRET="$(cat /app/.jwtsecret)"
 
 # Start the API server.
+touch /data/test.file
 node /app/music-server/dist/main.js &
 backend_pid=$!
 
@@ -184,7 +185,7 @@ ENV SERVER_PORT=7000
 ENV SERVER_ADDRESS=127.0.0.1
 ENV FRONTEND_PORT=8000
 ENV FRONTEND_ADDRESS=127.0.0.1
-ENV DATABASE_PATH=/data/music-server.sqlite
+ENV DATABASE_PATH=/data/streamish.sqlite
 ENV SYNOLOGY_PUBLIC_KEY_PATH=./certs/public.pem
 ENV SYNOLOGY_PRIVATE_KEY_PATH=./certs/private.pem
 
