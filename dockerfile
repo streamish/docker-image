@@ -84,7 +84,7 @@ COPY --from=frontend-build \
     /build/music-webui/dist \
     /app/music-webui/dist
 RUN mkdir -p /data /music /var/lib/nginx /var/log/nginx /run/nginx \
-    && chown -R node:node /var/lib/nginx /var/log/nginx /run/nginx
+    && chown -R node:node /var/lib/nginx /var/log/nginx /run/nginx /data
 RUN mkdir -p /data /library1 /library2 /library3 /library4 /library5 /library6 /library7 /library8 /library9 /library10 \
     && chown -R node:node /library1 /library2 /library3 /library4 /library5 /library6 /library7 /library8 /library9 /library10
 RUN openssl rand -hex 32 > /app/.jwtsecret \
