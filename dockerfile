@@ -118,7 +118,7 @@ http {
         # Proxy API requests to the backend.  Only the API path is required
         # for the Music Server, the rest are compatibiltiy routes for smartphone
         # apps.
-        location ^/(api|webapi|rest|musicstation|cgi=bin)/ {
+        location ^/(api|webapi|rest|musicstation|cgi-bin)/ {
             proxy_pass http://127.0.0.1:7000;
             proxy_http_version 1.1;
 
