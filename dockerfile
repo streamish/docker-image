@@ -65,7 +65,7 @@ RUN git clone https://github.com/streamish/music-webui.git music-webui \
 WORKDIR /build/music-webui
 RUN npm ci
 ENV NODE_ENV=production
-ENV VITE_API_BASE_URL=http://127.0.0.1:8000
+ENV VITE_API_BASE_URL=
 RUN npm run build:prod
 
 
