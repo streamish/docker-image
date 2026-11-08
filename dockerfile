@@ -169,7 +169,7 @@ VOLUME ["/data", "/music", "/library1", "/library2", "/library3", "/library4", "
 
 ENV BUILD_DATABASE=true
 ENV SERVER_PORT=7000
-ENV SERVER_ADDRESS=127.0.0.1/api
+ENV SERVER_ADDRESS=127.0.0.1
 ENV FRONTEND_PORT=8000
 ENV FRONTEND_ADDRESS=127.0.0.1
 ENV DATABASE_PATH=/data/streamish.sqlite
