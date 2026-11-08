@@ -90,6 +90,7 @@ RUN mkdir -p /data /library1 /library2 /library3 /library4 /library5 /library6 /
 RUN openssl rand -hex 32 > /app/.jwtsecret \
     && chown node:node /app/.jwtsecret \
     && chmod 600 /app/.jwtsecret
+RUN chown -R 1000:1000 /data
 RUN cat <<'EOF' > /etc/nginx/nginx.conf
 worker_processes 1;
 pid /tmp/nginx.pid;
