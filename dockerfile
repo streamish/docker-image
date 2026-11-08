@@ -151,7 +151,6 @@ set -eu
 export JWT_SECRET="$(cat /app/.jwtsecret)"
 
 # Start the API server.
-touch /data/test.file
 node /app/music-server/dist/main.js &
 backend_pid=$!
 
