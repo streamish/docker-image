@@ -65,7 +65,7 @@ RUN git clone https://github.com/streamish/music-webui.git music-webui \
 WORKDIR /build/music-webui
 RUN npm ci
 ENV NODE_ENV=production
-ENV VITE_API_BASE_URL=/
+ENV VITE_API_BASE_URL=http://127.0.0.1:8000
 RUN npm run build:prod
 
 
@@ -177,7 +177,6 @@ ENV SERVER_ADDRESS=127.0.0.1
 ENV FRONTEND_PORT=8000
 ENV FRONTEND_ADDRESS=127.0.0.1
 ENV DATABASE_PATH=/data/streamish.sqlite
-ENV VITE_API_BASE_URL=http://127.0.0.1:8000
 ENV SYNOLOGY_PUBLIC_KEY_PATH=./certs/public.pem
 ENV SYNOLOGY_PRIVATE_KEY_PATH=./certs/private.pem
 
